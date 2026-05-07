@@ -195,6 +195,56 @@ class TestRenderFunctions:
         result = render_edit_tool(tool_input, "tool-123")
         assert result == snapshot_html
 
+    def test_render_edit_tool_unified_diff_marks_only_changed_line(self):
+        """Unchanged lines should be marked equal; only the changed line gets -/+."""
+        old_text = "line one\nline two\nline three\nline four"
+        new_text = "line one\nline two CHANGED\nline three\nline four"
+        tool_input = {
+            "file_path": "/project/file.py",
+            "old_string": old_text,
+            "new_string": new_text,
+        }
+        result = render_edit_tool(tool_input, "tool-123")
+        assert result.count("edit-line-equal") == 3
+        assert result.count("edit-line-delete") == 1
+        assert result.count("edit-line-insert") == 1
+
+    def test_render_edit_tool_word_level_highlight_on_replaced_line(self):
+        """The differing word on a replaced line should be wrapped in edit-word."""
+        tool_input = {
+            "file_path": "/project/file.py",
+            "old_string": "hello world\nshared line",
+            "new_string": "hello WORLD\nshared line",
+        }
+        result = render_edit_tool(tool_input, "tool-123")
+        assert "edit-word" in result
+        assert "WORLD" in result
+        # Equal portion ("hello ") should not be inside edit-word
+        assert '<span class="edit-word">hello ' not in result
+
+    def test_render_edit_tool_pure_addition(self):
+        """Pure additions should produce only equal + insert lines, no deletes."""
+        tool_input = {
+            "file_path": "/project/file.py",
+            "old_string": "line one\nline two",
+            "new_string": "line one\nline two\nline three",
+        }
+        result = render_edit_tool(tool_input, "tool-123")
+        assert result.count("edit-line-equal") == 2
+        assert result.count("edit-line-insert") == 1
+        assert result.count("edit-line-delete") == 0
+
+    def test_render_edit_tool_html_escapes_diff_content(self):
+        """Raw HTML in the diff content must be escaped."""
+        tool_input = {
+            "file_path": "/project/file.py",
+            "old_string": "<script>alert('x')</script>",
+            "new_string": "<script>alert('y')</script>",
+        }
+        result = render_edit_tool(tool_input, "tool-123")
+        assert "<script>alert" not in result
+        assert "&lt;script&gt;" in result
+
     def test_render_bash_tool(self, snapshot_html):
         """Test Bash tool rendering."""
         tool_input = {

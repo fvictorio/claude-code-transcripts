@@ -78,14 +78,17 @@
 {%- endmacro %}
 
 {# Edit tool #}
-{% macro edit_tool(file_path, old_string, new_string, replace_all, tool_id) %}
+{% macro edit_tool(file_path, replace_all, tool_id, diff_rows) %}
 {%- set filename = file_path.split('/')[-1] if '/' in file_path else file_path -%}
 <div class="file-tool edit-tool" data-tool-id="{{ tool_id }}">
 <div class="file-tool-header edit-header"><span class="file-tool-icon">✏️</span> Edit <span class="file-tool-path">{{ filename }}</span>{% if replace_all %} <span class="edit-replace-all">(replace all)</span>{% endif %}</div>
 <div class="file-tool-fullpath">{{ file_path }}</div>
 <div class="truncatable"><div class="truncatable-content">
-<div class="edit-section edit-old"><div class="edit-label">−</div><pre class="edit-content">{{ old_string }}</pre></div>
-<div class="edit-section edit-new"><div class="edit-label">+</div><pre class="edit-content">{{ new_string }}</pre></div>
+<div class="edit-diff">
+{%- for row in diff_rows %}
+<div class="edit-line edit-line-{{ row.kind }}"><span class="edit-marker">{{ row.marker }}</span><span class="edit-line-content">{{ row.html|safe }}</span></div>
+{%- endfor %}
+</div>
 </div><button class="expand-btn">Show more</button></div>
 </div>
 {%- endmacro %}

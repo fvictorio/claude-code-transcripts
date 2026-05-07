@@ -50,15 +50,18 @@ time { color: var(--text-muted); font-size: 0.8rem; }
 .file-tool-path { font-family: monospace; background: rgba(0,0,0,0.08); padding: 2px 8px; border-radius: 4px; }
 .file-tool-fullpath { font-family: monospace; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; word-break: break-all; }
 .file-content { margin: 0; }
-.edit-section { display: flex; margin: 4px 0; border-radius: 4px; overflow: hidden; }
-.edit-label { padding: 8px 12px; font-weight: bold; font-family: monospace; display: flex; align-items: flex-start; }
-.edit-old { background: #fce4ec; }
-.edit-old .edit-label { color: #b71c1c; background: #f8bbd9; }
-.edit-old .edit-content { color: #880e4f; }
-.edit-new { background: #e8f5e9; }
-.edit-new .edit-label { color: #1b5e20; background: #a5d6a7; }
-.edit-new .edit-content { color: #1b5e20; }
-.edit-content { margin: 0; flex: 1; background: transparent; font-size: 0.85rem; }
+.edit-diff { font-family: monospace; font-size: 0.85rem; margin: 4px 0; border-radius: 4px; overflow: hidden; background: #fafafa; }
+.edit-line { display: flex; align-items: flex-start; min-height: 1.4em; }
+.edit-marker { flex: 0 0 1.5em; padding: 2px 6px; text-align: center; font-weight: bold; user-select: none; }
+.edit-line-content { flex: 1; padding: 2px 8px; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: anywhere; }
+.edit-line-equal { color: #555; }
+.edit-line-equal .edit-marker { color: #999; }
+.edit-line-delete { background: #fce4ec; color: #880e4f; }
+.edit-line-delete .edit-marker { background: #f8bbd9; color: #b71c1c; }
+.edit-line-delete .edit-word { background: #f48fb1; color: #4a0014; border-radius: 2px; padding: 0 1px; }
+.edit-line-insert { background: #e8f5e9; color: #1b5e20; }
+.edit-line-insert .edit-marker { background: #a5d6a7; color: #1b5e20; }
+.edit-line-insert .edit-word { background: #66bb6a; color: #003300; border-radius: 2px; padding: 0 1px; }
 .edit-replace-all { font-size: 0.75rem; font-weight: normal; color: var(--text-muted); }
 .write-tool .truncatable.truncated::after { background: linear-gradient(to bottom, transparent, #e6f4ea); }
 .edit-tool .truncatable.truncated::after { background: linear-gradient(to bottom, transparent, #fff0e5); }
@@ -163,15 +166,15 @@ details.continuation[open] summary { border-radius: 12px 12px 0 0; margin-bottom
 <div class="file-tool-header edit-header"><span class="file-tool-icon">✏️</span> Edit <span class="file-tool-path">math_utils.py</span></div>
 <div class="file-tool-fullpath">/project/math_utils.py</div>
 <div class="truncatable"><div class="truncatable-content">
-<div class="edit-section edit-old"><div class="edit-label">−</div><pre class="edit-content">    return a - b
-</pre></div>
-<div class="edit-section edit-new"><div class="edit-label">+</div><pre class="edit-content">    return a - b
-
-
-def multiply(a: int, b: int) -&gt; int:
-    &#34;&#34;&#34;Multiply two numbers.&#34;&#34;&#34;
-    return a * b
-</pre></div>
+<div class="edit-diff">
+<div class="edit-line edit-line-equal"><span class="edit-marker"> </span><span class="edit-line-content">    return a - b</span></div>
+<div class="edit-line edit-line-equal"><span class="edit-marker"> </span><span class="edit-line-content"></span></div>
+<div class="edit-line edit-line-insert"><span class="edit-marker">+</span><span class="edit-line-content"></span></div>
+<div class="edit-line edit-line-insert"><span class="edit-marker">+</span><span class="edit-line-content">def multiply(a: int, b: int) -&gt; int:</span></div>
+<div class="edit-line edit-line-insert"><span class="edit-marker">+</span><span class="edit-line-content">    &quot;&quot;&quot;Multiply two numbers.&quot;&quot;&quot;</span></div>
+<div class="edit-line edit-line-insert"><span class="edit-marker">+</span><span class="edit-line-content">    return a * b</span></div>
+<div class="edit-line edit-line-insert"><span class="edit-marker">+</span><span class="edit-line-content"></span></div>
+</div>
 </div><button class="expand-btn">Show more</button></div>
 </div></div></div>
 <div class="message tool-reply" id="msg-2025-12-24T10-05-10-000Z"><div class="message-header"><span class="role-label">Tool reply</span><a href="#msg-2025-12-24T10-05-10-000Z" class="timestamp-link"><time datetime="2025-12-24T10:05:10.000Z" data-timestamp="2025-12-24T10:05:10.000Z">2025-12-24T10:05:10.000Z</time></a></div><div class="message-content"><div class="tool-result"><div class="truncatable"><div class="truncatable-content"><pre>File edited successfully</pre></div><button class="expand-btn">Show more</button></div></div></div></div>
