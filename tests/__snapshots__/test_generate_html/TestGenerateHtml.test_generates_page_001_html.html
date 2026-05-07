@@ -58,10 +58,8 @@ time { color: var(--text-muted); font-size: 0.8rem; }
 .edit-line-equal .edit-marker { color: #999; }
 .edit-line-delete { background: #fce4ec; color: #880e4f; }
 .edit-line-delete .edit-marker { background: #f8bbd9; color: #b71c1c; }
-.edit-line-delete .edit-word { background: #f48fb1; color: #4a0014; border-radius: 2px; padding: 0 1px; }
 .edit-line-insert { background: #e8f5e9; color: #1b5e20; }
 .edit-line-insert .edit-marker { background: #a5d6a7; color: #1b5e20; }
-.edit-line-insert .edit-word { background: #66bb6a; color: #003300; border-radius: 2px; padding: 0 1px; }
 .edit-replace-all { font-size: 0.75rem; font-weight: normal; color: var(--text-muted); }
 .write-tool .truncatable.truncated::after { background: linear-gradient(to bottom, transparent, #e6f4ea); }
 .edit-tool .truncatable.truncated::after { background: linear-gradient(to bottom, transparent, #fff0e5); }
@@ -269,8 +267,8 @@ test_subtract - AssertionError: expected 5 but got None</pre></div><button class
 <div class="file-tool-fullpath">/project/tests/test_math.py</div>
 <div class="truncatable"><div class="truncatable-content">
 <div class="edit-diff">
-<div class="edit-line edit-line-delete"><span class="edit-marker">-</span><span class="edit-line-content">assert subtract(10, 5) == <span class="edit-word">None</span></span></div>
-<div class="edit-line edit-line-insert"><span class="edit-marker">+</span><span class="edit-line-content">assert subtract(10, 5) == <span class="edit-word">5</span></span></div>
+<div class="edit-line edit-line-delete"><span class="edit-marker">-</span><span class="edit-line-content">assert subtract(10, 5) == None</span></div>
+<div class="edit-line edit-line-insert"><span class="edit-marker">+</span><span class="edit-line-content">assert subtract(10, 5) == 5</span></div>
 </div>
 </div><button class="expand-btn">Show more</button></div>
 </div></div></div>

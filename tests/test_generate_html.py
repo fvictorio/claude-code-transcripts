@@ -209,19 +209,6 @@ class TestRenderFunctions:
         assert result.count("edit-line-delete") == 1
         assert result.count("edit-line-insert") == 1
 
-    def test_render_edit_tool_word_level_highlight_on_replaced_line(self):
-        """The differing word on a replaced line should be wrapped in edit-word."""
-        tool_input = {
-            "file_path": "/project/file.py",
-            "old_string": "hello world\nshared line",
-            "new_string": "hello WORLD\nshared line",
-        }
-        result = render_edit_tool(tool_input, "tool-123")
-        assert "edit-word" in result
-        assert "WORLD" in result
-        # Equal portion ("hello ") should not be inside edit-word
-        assert '<span class="edit-word">hello ' not in result
-
     def test_render_edit_tool_pure_addition(self):
         """Pure additions should produce only equal + insert lines, no deletes."""
         tool_input = {

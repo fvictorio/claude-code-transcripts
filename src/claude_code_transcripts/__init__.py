@@ -728,68 +728,27 @@ def render_write_tool(tool_input, tool_id):
     return _macros.write_tool(file_path, content, tool_id)
 
 
-_WORD_DIFF_TOKEN_RE = re.compile(r"\w+|\s+|[^\w\s]")
-
-
-def _word_diff_html(old_line, new_line):
-    """Return (old_html, new_html) with differing tokens wrapped in edit-word spans."""
-    old_tokens = _WORD_DIFF_TOKEN_RE.findall(old_line)
-    new_tokens = _WORD_DIFF_TOKEN_RE.findall(new_line)
-    sm = difflib.SequenceMatcher(a=old_tokens, b=new_tokens, autojunk=False)
-    old_parts = []
-    new_parts = []
-    for tag, i1, i2, j1, j2 in sm.get_opcodes():
-        old_chunk = html.escape("".join(old_tokens[i1:i2]))
-        new_chunk = html.escape("".join(new_tokens[j1:j2]))
-        if tag == "equal":
-            old_parts.append(old_chunk)
-            new_parts.append(new_chunk)
-        else:
-            if old_chunk:
-                old_parts.append(f'<span class="edit-word">{old_chunk}</span>')
-            if new_chunk:
-                new_parts.append(f'<span class="edit-word">{new_chunk}</span>')
-    return "".join(old_parts), "".join(new_parts)
-
-
 def compute_edit_diff(old_string, new_string):
     """Build a list of unified-diff rows for the Edit tool renderer.
 
     Each row is a dict with keys: kind ('equal'|'delete'|'insert'),
-    marker (' '|'-'|'+'), and html (already-escaped line content, possibly
-    containing edit-word spans).
+    marker (' '|'-'|'+'), and html (already-escaped line content).
     """
     old_lines = old_string.split("\n")
     new_lines = new_string.split("\n")
     sm = difflib.SequenceMatcher(a=old_lines, b=new_lines, autojunk=False)
     rows = []
     for tag, i1, i2, j1, j2 in sm.get_opcodes():
-        if tag == "equal":
+        if tag in ("equal",):
             for line in old_lines[i1:i2]:
                 rows.append({"kind": "equal", "marker": " ", "html": html.escape(line)})
-        elif tag == "delete":
+        if tag in ("delete", "replace"):
             for line in old_lines[i1:i2]:
                 rows.append(
                     {"kind": "delete", "marker": "-", "html": html.escape(line)}
                 )
-        elif tag == "insert":
+        if tag in ("insert", "replace"):
             for line in new_lines[j1:j2]:
-                rows.append(
-                    {"kind": "insert", "marker": "+", "html": html.escape(line)}
-                )
-        elif tag == "replace":
-            old_chunk = old_lines[i1:i2]
-            new_chunk = new_lines[j1:j2]
-            paired = min(len(old_chunk), len(new_chunk))
-            for k in range(paired):
-                old_html, new_html = _word_diff_html(old_chunk[k], new_chunk[k])
-                rows.append({"kind": "delete", "marker": "-", "html": old_html})
-                rows.append({"kind": "insert", "marker": "+", "html": new_html})
-            for line in old_chunk[paired:]:
-                rows.append(
-                    {"kind": "delete", "marker": "-", "html": html.escape(line)}
-                )
-            for line in new_chunk[paired:]:
                 rows.append(
                     {"kind": "insert", "marker": "+", "html": html.escape(line)}
                 )
@@ -1095,10 +1054,8 @@ time { color: var(--text-muted); font-size: 0.8rem; }
 .edit-line-equal .edit-marker { color: #999; }
 .edit-line-delete { background: #fce4ec; color: #880e4f; }
 .edit-line-delete .edit-marker { background: #f8bbd9; color: #b71c1c; }
-.edit-line-delete .edit-word { background: #f48fb1; color: #4a0014; border-radius: 2px; padding: 0 1px; }
 .edit-line-insert { background: #e8f5e9; color: #1b5e20; }
 .edit-line-insert .edit-marker { background: #a5d6a7; color: #1b5e20; }
-.edit-line-insert .edit-word { background: #66bb6a; color: #003300; border-radius: 2px; padding: 0 1px; }
 .edit-replace-all { font-size: 0.75rem; font-weight: normal; color: var(--text-muted); }
 .write-tool .truncatable.truncated::after { background: linear-gradient(to bottom, transparent, #e6f4ea); }
 .edit-tool .truncatable.truncated::after { background: linear-gradient(to bottom, transparent, #fff0e5); }
